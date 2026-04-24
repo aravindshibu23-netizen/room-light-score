@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#19323c">
+    <title>Room Light Score</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img">
+              <path d="M9 18h6m-5 3h4M8.5 14.5a6 6 0 1 1 7 0c-.7.5-1 1.1-1.1 1.9H9.6c-.1-.8-.4-1.4-1.1-1.9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M12 2v2M4.9 4.9l1.4 1.4M2 12h2m15.1-7.1-1.4 1.4M20 12h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            </svg>
+          </span>
+          <div>
+            <p class="eyebrow">Shared Room</p>
+            <h1 id="roomTitle">Room Light Score</h1>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="icon-button hidden" id="installButton" type="button" title="Install app" aria-label="Install app">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3v11m0 0 4-4m-4 4-4-4M5 21h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+          <span class="sync-pill" id="syncStatus">Local only</span>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="overview-panel">
+          <div class="leader-block">
+            <p class="section-kicker">Highest Score</p>
+            <h2 id="leaderName">No points yet</h2>
+            <div class="leader-score">
+              <span id="leaderScore">0</span>
+              <span>points</span>
+            </div>
+          </div>
+          <div class="punishment-block">
+            <p class="section-kicker">Punishment</p>
+            <p id="punishmentText">No punishment yet</p>
+            <span class="status-badge" id="statusBadge">Clear</span>
+          </div>
+        </section>
+
+        <section class="entry-panel">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Add Score</p>
+              <h2>Light Left On</h2>
+            </div>
+            <select id="reasonSelect" aria-label="Light location">
+              <option value="Hall light">Hall light</option>
+              <option value="Kitchen light">Kitchen light</option>
+              <option value="Bedroom light">Bedroom light</option>
+              <option value="Bathroom light">Bathroom light</option>
+              <option value="Balcony light">Balcony light</option>
+              <option value="Other light">Other light</option>
+            </select>
+          </div>
+          <div class="note-row">
+            <input id="noteInput" maxlength="80" placeholder="Optional note" autocomplete="off">
+          </div>
+          <div class="person-grid" id="peopleGrid" aria-live="polite"></div>
+        </section>
+
+        <section class="score-panel">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Scoreboard</p>
+              <h2>This Round</h2>
+            </div>
+            <div class="tool-row">
+              <button class="icon-button" id="undoButton" type="button" title="Undo last score" aria-label="Undo last score">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 14 4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </button>
+              <button class="icon-button" id="exportButton" type="button" title="Export backup" aria-label="Export backup">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </button>
+              <button class="icon-button danger" id="resetButton" type="button" title="Reset round" aria-label="Reset round">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 6h18M8 6V4h8v2m-1 4v8M9 10v8M5 6l1 15h12l1-15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="score-list" id="scoreList"></div>
+        </section>
+
+        <section class="exit-panel">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Exit Log</p>
+              <h2>Last Marked Out</h2>
+            </div>
+            <p class="last-exit" id="lastExit">None</p>
+          </div>
+          <div class="exit-grid" id="exitGrid"></div>
+        </section>
+
+        <section class="history-panel">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">History</p>
+              <h2>Recent Scores</h2>
+            </div>
+          </div>
+          <div class="history-list" id="historyList"></div>
+        </section>
+
+        <section class="settings-panel">
+          <details>
+            <summary>
+              <span>Settings</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </summary>
+            <form id="settingsForm">
+              <label class="field">
+                <span>Room name</span>
+                <input id="roomNameInput" maxlength="36" autocomplete="off">
+              </label>
+              <label class="field">
+                <span>Punishment</span>
+                <input id="punishmentInput" maxlength="60" autocomplete="off">
+              </label>
+              <div class="member-fields" id="memberFields"></div>
+              <button class="primary-button" type="submit">Save Settings</button>
+            </form>
+          </details>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
